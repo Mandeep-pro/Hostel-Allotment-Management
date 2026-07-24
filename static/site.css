@@ -1,7 +1,7 @@
 :root { --ink:#162e3b; --muted:#60717b; --accent:#007c74; --cream:#f5f1e8; --card:#fffdfa; --line:#d9dfdb; }
 * { box-sizing:border-box; }
 select { padding:12px; border:1px solid #aab8b3; border-radius:8px; font:inherit; }
-.delete-student { display:inline; }.delete-student button { margin:8px 0 0; padding:6px 10px; font-size:.82rem; }.danger { background:#a63d35; }
+.danger { background:#a63d35; }.student-removal { max-width:760px; padding:22px; margin:0 0 24px; }.student-removal summary { cursor:pointer; color:var(--accent); font-size:1.05rem; font-weight:800; }.student-removal form { margin-top:16px; }.student-selector { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; max-height:300px; overflow-y:auto; padding:4px; }.student-selector label { margin:0; padding:10px; border:1px solid var(--line); border-radius:8px; font-weight:600; }.student-selector small { color:var(--muted); }.student-removal button { margin-top:18px; }
 body { margin:0; color:var(--ink); background:var(--cream); font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
 .site-header { max-width:1100px; margin:auto; padding:22px 24px; display:flex; justify-content:space-between; align-items:center; }
 .brand { color:var(--ink); font-size:1.2rem; font-weight:800; text-decoration:none; }.brand span { color:var(--accent); } nav { display:flex; gap:18px; } nav a { color:var(--ink); text-decoration:none; font-weight:600; }
