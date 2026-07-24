@@ -157,6 +157,7 @@ def admin_dashboard():
 @app.post("/admin/shuffle")
 @admin_required
 def shuffle_rooms():
+    Student.query.update({Student.room_id: None})
     Room.query.delete()
     database.session.flush()
 
@@ -187,9 +188,27 @@ def shuffle_rooms():
 @app.post("/admin/reset")
 @admin_required
 def reset_assignments():
+    Student.query.update({Student.room_id: None})
     Room.query.delete()
     database.session.commit()
     flash("All room assignments were cleared. Student registrations were kept.", "success")
+    return redirect(url_for("admin_dashboard"))
+
+
+@app.post("/admin/students/<int:student_id>/delete")
+@admin_required
+def delete_student(student_id):
+    student = database.session.get(Student, student_id)
+    if not student:
+        flash("Student record was not found.", "error")
+        return redirect(url_for("admin_dashboard"))
+
+    student_name = student.full_name
+    database.session.delete(student)
+    Student.query.update({Student.room_id: None})
+    Room.query.delete()
+    database.session.commit()
+    flash(f"Removed {student_name}. Room assignments were cleared; shuffle again to re-allot rooms.", "success")
     return redirect(url_for("admin_dashboard"))
 
 
