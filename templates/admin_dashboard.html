@@ -2,7 +2,7 @@
 {% block title %}Admin · Manasbal Hostel Allotment{% endblock %}
 {% block content %}
 <section class="admin-top">
-  <div><p class="eyebrow">Administrator dashboard</p><h1>Manasbal room allotment</h1><p>{{ total_students }} student{{ '' if total_students == 1 else 's' }} registered.</p></div>
+  <div><p class="eyebrow">Administrator dashboard</p><h1>Hostel room allotment</h1><p>{{ total_students }} student{{ '' if total_students == 1 else 's' }} registered across Manasbal and Mansar.</p></div>
   <div class="actions">
     <form method="post" action="{{ url_for('load_demo_students') }}"><button class="secondary" type="submit">Load dummy students</button></form>
     <form method="post" action="{{ url_for('shuffle_rooms') }}"><button type="submit">Shuffle and allot rooms</button></form>
@@ -26,6 +26,6 @@
 {% endif %}
 
 {% if unassigned_students %}
-  <section class="card unassigned"><h2>Waiting list ({{ unassigned_students|length }})</h2><p>These students are retained for the next round because every allotted room must have exactly six students.</p><ul>{% for student in unassigned_students %}<li>{{ student.full_name }} <small>({{ student.enrollment_number }})</small></li>{% endfor %}</ul></section>
+  <section class="card unassigned"><h2>Waiting list ({{ unassigned_students|length }})</h2><p>These students are retained for the next round because every allotted room must have exactly six students.</p><ul>{% for student in unassigned_students %}<li>{{ student.full_name }} <small>({{ student.enrollment_number }} · {{ student.hostel_name }})</small></li>{% endfor %}</ul></section>
 {% endif %}
 {% endblock %}
