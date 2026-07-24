@@ -25,15 +25,6 @@ ENROLLMENT_PATTERN = re.compile(r"^\d{3}$")
 NAME_PATTERN = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")
 HOSTELS = ("Manasbal", "Mansar")
 
-DEMO_STUDENTS = [
-    ("Aman", "029"),
-    ("Pankaj", "046"),
-    ("Vivek", "052"),
-    ("Navpreet", "021"),
-    ("Abhishek", "060"),
-]
-
-
 class Student(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     full_name = database.Column(database.String(120), nullable=False)
@@ -209,20 +200,6 @@ def delete_students():
         database.session.delete(student)
     database.session.commit()
     flash(f"Removed {len(students)} student(s). Room assignments were cleared; shuffle again to re-allot rooms.", "success")
-    return redirect(url_for("admin_dashboard"))
-
-
-@app.post("/admin/load-demo-students")
-@admin_required
-def load_demo_students():
-    existing_enrollments = {student.enrollment_number for student in Student.query.all()}
-    added_count = 0
-    for full_name, enrollment_number in DEMO_STUDENTS:
-        if enrollment_number not in existing_enrollments:
-            database.session.add(Student(full_name=full_name, enrollment_number=enrollment_number))
-            added_count += 1
-    database.session.commit()
-    flash(f"Added {added_count} dummy student record(s).", "success")
     return redirect(url_for("admin_dashboard"))
 
 
