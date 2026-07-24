@@ -17,7 +17,7 @@
       <article class="card room-card">
         <p class="eyebrow">{{ room.hostel_name }}</p><h2>Room {{ room.room_number }}</h2>
         <p class="capacity">{{ room.students|length }} / 6 students</p>
-        <ol>{% for student in room.students|sort(attribute='full_name') %}<li><strong>{{ student.full_name }}</strong><small>{{ student.enrollment_number }}</small></li>{% endfor %}</ol>
+        <ol>{% for student in room.students|sort(attribute='full_name') %}<li><strong>{{ student.full_name }}</strong><small>{{ student.enrollment_number }}</small><form class="delete-student" method="post" action="{{ url_for('delete_student', student_id=student.id) }}" onsubmit="return confirm('Remove {{ student.full_name }}? This will clear all current room assignments.');"><button class="danger" type="submit">Remove student</button></form></li>{% endfor %}</ol>
       </article>
     {% endfor %}
   </section>
@@ -26,6 +26,6 @@
 {% endif %}
 
 {% if unassigned_students %}
-  <section class="card unassigned"><h2>Waiting list ({{ unassigned_students|length }})</h2><p>These students are retained for the next round because every allotted room must have exactly six students.</p><ul>{% for student in unassigned_students %}<li>{{ student.full_name }} <small>({{ student.enrollment_number }} · {{ student.hostel_name }})</small></li>{% endfor %}</ul></section>
+  <section class="card unassigned"><h2>Waiting list ({{ unassigned_students|length }})</h2><p>These students are retained for the next round because every allotted room must have exactly six students.</p><ul>{% for student in unassigned_students %}<li>{{ student.full_name }} <small>({{ student.enrollment_number }} · {{ student.hostel_name }})</small><form class="delete-student" method="post" action="{{ url_for('delete_student', student_id=student.id) }}" onsubmit="return confirm('Remove {{ student.full_name }}? This will clear all current room assignments.');"><button class="danger" type="submit">Remove student</button></form></li>{% endfor %}</ul></section>
 {% endif %}
 {% endblock %}
