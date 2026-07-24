@@ -9,6 +9,7 @@ import os
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import text
 
 BASE_DIRECTORY = Path(__file__).resolve().parent
 DATABASE_PATH = BASE_DIRECTORY / "hostel_allotment.db"
@@ -22,6 +23,7 @@ app.config["ADMIN_PASSWORD"] = os.environ.get("HOSTEL_ADMIN_PASSWORD", "manasbal
 database = SQLAlchemy(app)
 ENROLLMENT_PATTERN = re.compile(r"^\d{3}$")
 NAME_PATTERN = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")
+HOSTELS = ("Manasbal", "Mansar")
 
 DEMO_STUDENTS = [
     ("Aarav Sharma", "016"),
@@ -43,6 +45,7 @@ class Student(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     full_name = database.Column(database.String(120), nullable=False)
     enrollment_number = database.Column(database.String(40), nullable=False, unique=True, index=True)
+    hostel_name = database.Column(database.String(80), nullable=False, default="Manasbal")
     room_id = database.Column(database.Integer, database.ForeignKey("room.id"), nullable=True)
 
 
@@ -73,6 +76,7 @@ def student_registration():
     if request.method == "POST":
         name = request.form.get("full_name", "").strip()
         enrollment = request.form.get("enrollment_number", "").strip().upper()
+        hostel_name = request.form.get("hostel_name", "").strip()
 
         if not name or not enrollment:
             flash("Please enter both your name and enrollment number.", "error")
@@ -80,8 +84,10 @@ def student_registration():
             flash("Name can contain letters and spaces only.", "error")
         elif not ENROLLMENT_PATTERN.fullmatch(enrollment):
             flash("Enrollment number must contain exactly three digits (for example, 016).", "error")
+        elif hostel_name not in HOSTELS:
+            flash("Please choose either Manasbal or Mansar hostel.", "error")
         else:
-            database.session.add(Student(full_name=name, enrollment_number=enrollment))
+            database.session.add(Student(full_name=name, enrollment_number=enrollment, hostel_name=hostel_name))
             try:
                 database.session.commit()
                 flash("Registration saved successfully.", "success")
@@ -151,25 +157,28 @@ def admin_dashboard():
 @app.post("/admin/shuffle")
 @admin_required
 def shuffle_rooms():
-    students = Student.query.order_by(Student.id).all()
-    random.shuffle(students)
-
     Room.query.delete()
     database.session.flush()
 
-    complete_room_count = len(students) // 6
-    for room_index in range(complete_room_count):
-        room = Room(room_number=f"M-{room_index + 1:03d}", hostel_name="Manasbal")
-        database.session.add(room)
-        for student in students[room_index * 6 : (room_index + 1) * 6]:
-            student.room = room
+    created_rooms = []
+    for hostel_name, prefix in (("Manasbal", "M"), ("Mansar", "S")):
+        students = Student.query.filter_by(hostel_name=hostel_name).order_by(Student.id).all()
+        random.shuffle(students)
+        complete_room_count = len(students) // 6
+        for room_index in range(complete_room_count):
+            room = Room(room_number=f"{prefix}-{room_index + 1:03d}", hostel_name=hostel_name)
+            database.session.add(room)
+            created_rooms.append(hostel_name)
+            for student in students[room_index * 6 : (room_index + 1) * 6]:
+                student.room = room
 
-    for student in students[complete_room_count * 6 :]:
-        student.room = None
+        for student in students[complete_room_count * 6 :]:
+            student.room = None
 
     database.session.commit()
-    if complete_room_count:
-        flash(f"Created {complete_room_count} randomized Manasbal room(s), with exactly six students each.", "success")
+    if created_rooms:
+        summary = ", ".join(f"{hostel}: {created_rooms.count(hostel)}" for hostel in HOSTELS if hostel in created_rooms)
+        flash(f"Created randomized rooms with exactly six students each ({summary}).", "success")
     else:
         flash("At least six registered students are required to create a room.", "error")
     return redirect(url_for("admin_dashboard"))
@@ -200,6 +209,10 @@ def load_demo_students():
 
 with app.app_context():
     database.create_all()
+    student_columns = {column[1] for column in database.session.execute(text("PRAGMA table_info(student)"))}
+    if "hostel_name" not in student_columns:
+        database.session.execute(text("ALTER TABLE student ADD COLUMN hostel_name VARCHAR(80) NOT NULL DEFAULT 'Manasbal'"))
+        database.session.commit()
 
 
 if __name__ == "__main__":
