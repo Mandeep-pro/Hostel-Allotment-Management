@@ -1,6 +1,7 @@
 :root { --ink:#162e3b; --muted:#60717b; --accent:#007c74; --cream:#f5f1e8; --card:#fffdfa; --line:#d9dfdb; }
 * { box-sizing:border-box; }
 select { padding:12px; border:1px solid #aab8b3; border-radius:8px; font:inherit; }
+.delete-student { display:inline; }.delete-student button { margin:8px 0 0; padding:6px 10px; font-size:.82rem; }.danger { background:#a63d35; }
 body { margin:0; color:var(--ink); background:var(--cream); font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
 .site-header { max-width:1100px; margin:auto; padding:22px 24px; display:flex; justify-content:space-between; align-items:center; }
 .brand { color:var(--ink); font-size:1.2rem; font-weight:800; text-decoration:none; }.brand span { color:var(--accent); } nav { display:flex; gap:18px; } nav a { color:var(--ink); text-decoration:none; font-weight:600; }
