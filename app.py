@@ -129,11 +129,13 @@ def admin_logout():
 @admin_required
 def admin_dashboard():
     rooms = Room.query.order_by(Room.room_number).all()
+    assigned_students = Student.query.filter(Student.room_id.isnot(None)).order_by(Student.full_name).all()
     unassigned_students = Student.query.filter_by(room_id=None).order_by(Student.full_name).all()
     students = Student.query.order_by(Student.full_name).all()
     return render_template(
         "admin_dashboard.html",
         rooms=rooms,
+        assigned_students=assigned_students,
         unassigned_students=unassigned_students,
         students=students,
         total_students=Student.query.count(),
