@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Student registration</p>
+  <h1>Find your new Manasbal roommates.</h1>
+  <p>Submit your details once. The hostel administrator will randomly allot six students to every room.</p>
+</section>
+<form class="card form-card" method="post">
+  <label for="full_name">Full name</label>
+  <input id="full_name" name="full_name" pattern="[A-Za-z]+(?: [A-Za-z]+)*" title="Use letters and spaces only." maxlength="120" required autocomplete="name">
+  <small class="help-text">Use letters and spaces only; numbers and symbols are not allowed.</small>
+  <label for="enrollment_number">Enrollment number</label>
+  <input id="enrollment_number" name="enrollment_number" inputmode="numeric" pattern="[0-9]{3}" maxlength="3" placeholder="e.g. 016" required>
+  <small class="help-text">Use a three-digit enrollment number, for example 016, 028, or 088.</small>
+  <button type="submit">Register for allotment</button>
+</form>
+{% endblock %}

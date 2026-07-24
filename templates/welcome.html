@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="welcome-layout">
+  <div class="welcome-copy">
+    <p class="eyebrow">Welcome, students</p>
+    <h1>Welcome to Manasbal Hostel.</h1>
+    <p>Register your name and enrollment number to take part in the new hostel allotment. Roommates are assigned fairly at random, with six students in every room.</p>
+    <a class="primary-link" href="{{ url_for('student_registration') }}">Register for your room</a>
+  </div>
+  <aside class="card welcome-card">
+    <p class="eyebrow">Before you begin</p>
+    <h2>Keep these ready</h2>
+    <ul>
+      <li>Your full name — letters and spaces only</li>
+      <li>Your three-digit enrollment number</li>
+      <li>Example: <strong>016</strong>, <strong>028</strong>, or <strong>088</strong></li>
+    </ul>
+  </aside>
+</section>
+{% endblock %}

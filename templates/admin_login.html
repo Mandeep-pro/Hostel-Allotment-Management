@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Administrator Login · Manasbal Hostel{% endblock %}
+{% block content %}
+<section class="hero"><p class="eyebrow">Restricted area</p><h1>Administrator sign in</h1><p>Use the administrator credentials to manage student registrations and room allotments.</p></section>
+<form class="card form-card" method="post">
+  <label for="username">Username</label><input id="username" name="username" required autocomplete="username">
+  <label for="password">Password</label><input id="password" name="password" type="password" required autocomplete="current-password">
+  <button type="submit">Sign in</button>
+</form>
+{% endblock %}
