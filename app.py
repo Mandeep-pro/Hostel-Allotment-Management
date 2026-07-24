@@ -181,6 +181,8 @@ def student_registration():
 
     return render_template("register_student.html")
 
+    return render_template("register_student.html")
+
 
 @app.route("/my-allotment", methods=["GET", "POST"])
 def my_allotment():
@@ -243,6 +245,7 @@ def admin_dashboard():
 
 @app.post("/admin/generate-allotment")
 @admin_required
+<<<<<<< HEAD
 def generate_allotment():
     created_rooms = create_rooms_for_all_students()
     if not created_rooms:
@@ -251,6 +254,34 @@ def generate_allotment():
 
     flash("Room allotment generated successfully. The PDF report now lists occupied and empty rooms.", "success")
     return export_pdf()
+=======
+def shuffle_rooms():
+    Room.query.delete()
+    database.session.flush()
+
+    created_rooms = []
+    for hostel_name, prefix in (("Manasbal", "M"), ("Mansar", "S")):
+        students = Student.query.filter_by(hostel_name=hostel_name).order_by(Student.id).all()
+        random.shuffle(students)
+        complete_room_count = len(students) // 6
+        for room_index in range(complete_room_count):
+            room = Room(room_number=f"{prefix}-{room_index + 1:03d}", hostel_name=hostel_name)
+            database.session.add(room)
+            created_rooms.append(hostel_name)
+            for student in students[room_index * 6 : (room_index + 1) * 6]:
+                student.room = room
+
+        for student in students[complete_room_count * 6 :]:
+            student.room = None
+
+    database.session.commit()
+    if created_rooms:
+        summary = ", ".join(f"{hostel}: {created_rooms.count(hostel)}" for hostel in HOSTELS if hostel in created_rooms)
+        flash(f"Created randomized rooms with exactly six students each ({summary}).", "success")
+    else:
+        flash("At least six registered students are required to create a room.", "error")
+    return redirect(url_for("admin_dashboard"))
+>>>>>>> c230023 (Add Mansar hostel option)
 
 
 @app.post("/admin/reset")
@@ -333,9 +364,12 @@ with app.app_context():
     if "hostel_name" not in student_columns:
         database.session.execute(text("ALTER TABLE student ADD COLUMN hostel_name VARCHAR(80) NOT NULL DEFAULT 'Manasbal'"))
         database.session.commit()
+<<<<<<< HEAD
     if "preferred_room_number" not in student_columns:
         database.session.execute(text("ALTER TABLE student ADD COLUMN preferred_room_number VARCHAR(20)"))
         database.session.commit()
+=======
+>>>>>>> c230023 (Add Mansar hostel option)
 
 
 if __name__ == "__main__":
