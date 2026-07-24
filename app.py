@@ -153,7 +153,8 @@ def shuffle_rooms():
         random.shuffle(students)
         complete_room_count = len(students) // 6
         for room_index in range(complete_room_count):
-            room = Room(room_number=f"{prefix}-{room_index + 1:03d}", hostel_name=hostel_name)
+            room_number = 101 + room_index
+            room = Room(room_number=f"{prefix}-{room_number}", hostel_name=hostel_name)
             database.session.add(room)
             created_rooms.append(hostel_name)
             for student in students[room_index * 6 : (room_index + 1) * 6]:
