@@ -26,18 +26,11 @@ NAME_PATTERN = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")
 HOSTELS = ("Manasbal", "Mansar")
 
 DEMO_STUDENTS = [
-    ("Aarav Sharma", "016"),
-    ("Diya Verma", "028"),
-    ("Kabir Khan", "088"),
-    ("Meera Iyer", "104"),
-    ("Rohan Gupta", "119"),
-    ("Sana Mir", "127"),
-    ("Arjun Singh", "143"),
-    ("Isha Kapoor", "156"),
-    ("Vivaan Patel", "172"),
-    ("Ananya Das", "184"),
-    ("Reyansh Jain", "203"),
-    ("Zoya Ali", "219"),
+    ("Aman", "029"),
+    ("Pankaj", "046"),
+    ("Vivek", "052"),
+    ("Navpreet", "021"),
+    ("Abhishek", "060"),
 ]
 
 
