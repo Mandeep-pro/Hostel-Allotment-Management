@@ -1,6 +1,6 @@
 # Manasbal Hostel Allotment
 
-A Flask website for collecting student names and unique enrollment numbers, then randomly allotting registered students into Manasbal hostel rooms of exactly six students.
+A Flask website for collecting student names and unique enrollment numbers, then randomly allotting registered students into their chosen Manasbal or Mansar hostel rooms of exactly six students.
 
 ## Run locally
 
