@@ -146,10 +146,12 @@ def admin_logout():
 def admin_dashboard():
     rooms = Room.query.order_by(Room.room_number).all()
     unassigned_students = Student.query.filter_by(room_id=None).order_by(Student.full_name).all()
+    students = Student.query.order_by(Student.full_name).all()
     return render_template(
         "admin_dashboard.html",
         rooms=rooms,
         unassigned_students=unassigned_students,
+        students=students,
         total_students=Student.query.count(),
     )
 
@@ -195,20 +197,25 @@ def reset_assignments():
     return redirect(url_for("admin_dashboard"))
 
 
-@app.post("/admin/students/<int:student_id>/delete")
+@app.post("/admin/students/delete")
 @admin_required
-def delete_student(student_id):
-    student = database.session.get(Student, student_id)
-    if not student:
-        flash("Student record was not found.", "error")
+def delete_students():
+    student_ids = {int(student_id) for student_id in request.form.getlist("student_ids") if student_id.isdigit()}
+    if not student_ids:
+        flash("Select at least one student to remove.", "error")
         return redirect(url_for("admin_dashboard"))
 
-    student_name = student.full_name
-    database.session.delete(student)
+    students = Student.query.filter(Student.id.in_(student_ids)).all()
+    if not students:
+        flash("The selected student records were not found.", "error")
+        return redirect(url_for("admin_dashboard"))
+
     Student.query.update({Student.room_id: None})
     Room.query.delete()
+    for student in students:
+        database.session.delete(student)
     database.session.commit()
-    flash(f"Removed {student_name}. Room assignments were cleared; shuffle again to re-allot rooms.", "success")
+    flash(f"Removed {len(students)} student(s). Room assignments were cleared; shuffle again to re-allot rooms.", "success")
     return redirect(url_for("admin_dashboard"))
 
 
