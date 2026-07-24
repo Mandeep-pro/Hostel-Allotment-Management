@@ -4,7 +4,6 @@
 <section class="admin-top">
   <div><p class="eyebrow">Administrator dashboard</p><h1>Hostel room allotment</h1><p>{{ total_students }} student{{ '' if total_students == 1 else 's' }} registered across Manasbal and Mansar.</p><p class="live-status"><span></span> Live updates every 5 seconds</p></div>
   <div class="actions">
-    <form method="post" action="{{ url_for('load_demo_students') }}"><button class="secondary" type="submit">Load dummy students</button></form>
     <form method="post" action="{{ url_for('shuffle_rooms') }}"><button type="submit">Shuffle and allot rooms</button></form>
     {% if rooms %}<form method="post" action="{{ url_for('reset_assignments') }}"><button class="secondary" type="submit">Clear assignments</button></form>{% endif %}
     <form method="post" action="{{ url_for('admin_logout') }}"><button class="secondary" type="submit">Sign out</button></form>
