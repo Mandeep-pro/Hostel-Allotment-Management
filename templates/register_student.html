@@ -2,8 +2,8 @@
 {% block content %}
 <section class="hero">
   <p class="eyebrow">Student registration</p>
-  <h1>Find your new Manasbal roommates.</h1>
-  <p>Submit your details once. The hostel administrator will randomly allot six students to every room.</p>
+  <h1>Find your new hostel roommates.</h1>
+  <p>Choose your hostel and submit your details. The administrator will randomly allot six students to every room.</p>
 </section>
 <form class="card form-card" method="post">
   <label for="full_name">Full name</label>
@@ -12,6 +12,12 @@
   <label for="enrollment_number">Enrollment number</label>
   <input id="enrollment_number" name="enrollment_number" inputmode="numeric" pattern="[0-9]{3}" maxlength="3" placeholder="e.g. 016" required>
   <small class="help-text">Use a three-digit enrollment number, for example 016, 028, or 088.</small>
+  <label for="hostel_name">Hostel</label>
+  <select id="hostel_name" name="hostel_name" required>
+    <option value="" selected disabled>Select a hostel</option>
+    <option value="Manasbal">Manasbal</option>
+    <option value="Mansar">Mansar</option>
+  </select>
   <button type="submit">Register for allotment</button>
 </form>
 {% endblock %}
