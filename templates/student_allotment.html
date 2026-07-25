@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}My Allotment · Manasbal Hostel{% endblock %}
+{% block title %}My Allotment · Hostel{% endblock %}
 {% block content %}
 {% if not student %}
   <section class="hero"><p class="eyebrow">Student allotment status</p><h1>Check your room update.</h1><p>Enter your three-digit enrollment number to view your current allotment and roommate details.</p></section>
@@ -9,7 +9,7 @@
     <button type="submit">View my allotment</button>
   </form>
 {% elif student.room %}
-  <section class="hero"><p class="eyebrow">Allotment notification</p><h1>Congratulations, {{ student.full_name }}!</h1><p>You have been allotted <strong>Room {{ student.room.room_number }}</strong> in <strong>{{ student.room.hostel_name }} Hostel</strong>.</p></section>
+  <section class="hero"><p class="eyebrow">Allotment notification</p><h1>Congratulations, {{ student.full_name }}!</h1><p>You have been allotted <strong>{{ student.room.display_room_number }}</strong> in <strong>{{ student.room.hostel_name }} Hostel</strong>.</p></section>
   <section class="card roommates"><p class="eyebrow">Your roommates</p><h2>Meet the other students in your room</h2><ul>{% for roommate in roommates %}<li>{{ roommate.full_name }}</li>{% endfor %}</ul></section>
 {% else %}
   <section class="hero"><p class="eyebrow">Allotment status</p><h1>Hello, {{ student.full_name }}.</h1><p class="pending"><strong>Room is not yet allotted.</strong> Your registration is complete. You will see your room and roommates here as soon as the administrator completes the allotment.</p></section>

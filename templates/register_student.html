@@ -2,22 +2,33 @@
 {% block content %}
 <section class="hero">
   <p class="eyebrow">Student registration</p>
-  <h1>Find your new hostel roommates.</h1>
-  <p>Choose your hostel and submit your details. The administrator will randomly allot six students to every room.</p>
+  <h1>Register a six-student group for hostel allotment.</h1>
+  <p>Fill all six student rows, choose the hostel, and enter the room number you prefer. The administrator will generate rooms with six students in each room and export a PDF report.</p>
 </section>
 <form class="card form-card" method="post">
-  <label for="full_name">Full name</label>
-  <input id="full_name" name="full_name" pattern="[A-Za-z]+(?: [A-Za-z]+)*" title="Use letters and spaces only." maxlength="120" required autocomplete="name">
-  <small class="help-text">Use letters and spaces only; numbers and symbols are not allowed.</small>
-  <label for="enrollment_number">Enrollment number</label>
-  <input id="enrollment_number" name="enrollment_number" inputmode="numeric" pattern="[0-9]{3}" maxlength="3" placeholder="e.g. 016" required>
-  <small class="help-text">Use a three-digit enrollment number, for example 016, 028, or 088.</small>
   <label for="hostel_name">Hostel</label>
   <select id="hostel_name" name="hostel_name" required>
     <option value="" selected disabled>Select a hostel</option>
     <option value="Manasbal">Manasbal</option>
     <option value="Mansar">Mansar</option>
   </select>
-  <button type="submit">Register for allotment</button>
+
+  <label for="preferred_room">Preferred room number</label>
+  <input id="preferred_room" name="preferred_room" inputmode="numeric" pattern="(10[1-9]|11[0-9]|12[0-5]|20[1-9]|21[0-9]|22[0-5])" maxlength="3" placeholder="e.g. 101 or 201" required>
+  <small class="help-text">Use a room number between 101 and 125 or 201 and 225.</small>
+
+  <div class="registration-grid">
+    {% for index in range(1, 7) %}
+    <div class="student-entry">
+      <h2>Student {{ index }}</h2>
+      <label for="student_name_{{ index }}">Full name</label>
+      <input id="student_name_{{ index }}" name="student_name_{{ index }}" pattern="[A-Za-z]+(?: [A-Za-z]+)*" maxlength="120" required autocomplete="name">
+      <label for="enrollment_number_{{ index }}">Enrollment number</label>
+      <input id="enrollment_number_{{ index }}" name="enrollment_number_{{ index }}" inputmode="numeric" pattern="[0-9]{3}" maxlength="3" placeholder="e.g. 016" required>
+    </div>
+    {% endfor %}
+  </div>
+
+  <button type="submit">Register group for allotment</button>
 </form>
 {% endblock %}
