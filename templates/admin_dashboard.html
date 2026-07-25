@@ -1,11 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Admin · Manasbal Hostel Allotment{% endblock %}
+{% block title %}Admin · Hostel Allotment{% endblock %}
 {% block content %}
 <section class="admin-top">
-  <div><p class="eyebrow">Administrator dashboard</p><h1>Hostel room allotment</h1><p>{{ total_students }} student{{ '' if total_students == 1 else 's' }} registered across Manasbal and Mansar.</p><p class="live-status"><span></span> Live updates every 5 seconds</p></div>
+  <div><p class="eyebrow">Administrator dashboard</p><h1>Hostel room allotment</h1><p>{{ total_students }} student{{ '' if total_students == 1 else 's' }} registered across Manasbal and Mansar.</p><p class="live-status"><span></span> Room management is controlled from here.</p></div>
   <div class="actions">
-    <form method="post" action="{{ url_for('shuffle_rooms') }}"><button type="submit">Shuffle and allot rooms</button></form>
+    <form method="post" action="{{ url_for('generate_allotment') }}"><button type="submit">Generate allotment + PDF</button></form>
     {% if rooms %}<form method="post" action="{{ url_for('reset_assignments') }}"><button class="secondary" type="submit">Clear assignments</button></form>{% endif %}
+    <a class="secondary-link" href="{{ url_for('export_pdf') }}" target="_blank">Download PDF</a>
     <form method="post" action="{{ url_for('admin_logout') }}"><button class="secondary" type="submit">Sign out</button></form>
   </div>
 </section>
@@ -29,18 +30,34 @@
   <section class="room-grid">
     {% for room in rooms %}
       <article class="card room-card">
-        <p class="eyebrow">{{ room.hostel_name }}</p><h2>Room {{ room.room_number }}</h2>
+        <p class="eyebrow">{{ room.hostel_name }}</p><h2>{{ room.display_room_number }}</h2>
         <p class="capacity">{{ room.students|length }} / 6 students</p>
-        <ol>{% for student in room.students|sort(attribute='full_name') %}<li><strong>{{ student.full_name }}</strong><small>{{ student.enrollment_number }}</small></li>{% endfor %}</ol>
+        {% if room.students %}
+          <ol>{% for student in room.students|sort(attribute='full_name') %}<li><strong>{{ student.full_name }}</strong><small>{{ student.enrollment_number }}</small></li>{% endfor %}</ol>
+        {% else %}
+          <p class="empty-room">Empty room</p>
+        {% endif %}
       </article>
     {% endfor %}
   </section>
 {% else %}
-  <div class="card empty">No rooms have been allotted yet. Register at least six students, then shuffle.</div>
+  <div class="card empty">No rooms have been allotted yet. Register at least six students, then generate the allotment.</div>
+{% endif %}
+
+{% if assigned_students %}
+  <section class="card allotment-report">
+    <h2>Saved allotment report ({{ assigned_students|length }})</h2>
+    <p>This list is stored in the database so the administrator can review room labels and assigned student names at any time.</p>
+    <ul>
+      {% for student in assigned_students %}
+        <li><strong>{{ student.full_name }}</strong> — {{ student.room.display_room_number }} ({{ student.room.hostel_name }})</li>
+      {% endfor %}
+    </ul>
+  </section>
 {% endif %}
 
 {% if unassigned_students %}
-  <section class="card unassigned"><h2>Waiting list ({{ unassigned_students|length }})</h2><p>These students are retained for the next round because every allotted room must have exactly six students.</p><ul>{% for student in unassigned_students %}<li>{{ student.full_name }} <small>({{ student.enrollment_number }} · {{ student.hostel_name }})</small></li>{% endfor %}</ul></section>
+  <section class="card unassigned"><h2>Waiting list ({{ unassigned_students|length }})</h2><p>These students remain unassigned until the administrator generates the next room plan.</p><ul>{% for student in unassigned_students %}<li>{{ student.full_name }} <small>({{ student.enrollment_number }} · {{ student.hostel_name }})</small></li>{% endfor %}</ul></section>
 {% endif %}
 {% endblock %}
 
